@@ -1,15 +1,17 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow import keras
 
+import tensorflow as tf
+from keras import layers
+
+from sklearn.model_selection import train_test_split
 
 
 def run():
 # ------------------- Data was preprocessed using MongoDB, we just have to import and delete id from mongodb
     pd.set_option('display.max_columns', None)
-    data = pd.read_json(path_or_buf='Project_1/Date_Fruit_Datasets/Dates_Doubles.json',
+    data = pd.read_json(path_or_buf='C:\Repositories\SoSe2022_Machine_Learning\Project_1\Date_Fruit_Datasets\Dates_Doubles.json',
                         orient='records', lines=True)
     data.drop(columns=["_id"], inplace=True)
 
@@ -31,5 +33,18 @@ def run():
     plt.show()
     # -------------------Preprocessing
 
-    #processed_data = tf.keras.utils.normalize(data) TODO: Normalize/Encode Target Classes first, look up how handwriting was encoded
-    #print(processed_data)
+    stringlookuplayer = layers.StringLookup(output_mode="int") # Encode Classes
+    stringlookuplayer.adapt(data["Class"])
+    data["Class"] = stringlookuplayer(data["Class"])
+
+    #print(stringlookuplayer.get_vocabulary())
+    #print(data["Class"])
+    processed_data = tf.keras.utils.normalize(data)
+    x = processed_data.drop("Class", axis=1)
+    y = processed_data["Class"]
+    #Splitting the Data, it is important to stratify according to classes to avoid sampling bias as there is unequal distribution of classes
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+
+
+
+
