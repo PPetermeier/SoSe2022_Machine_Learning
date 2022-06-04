@@ -1,12 +1,11 @@
-from tensorflow import keras
-from keras import Sequential
+from tensorflow.keras import Sequential
 import numpy as np
-from keras.layers import Conv2D, MaxPool2D, Dense, GlobalAveragePooling2D
-import utilities
+from tensorflow.keras.layers import Conv2D, MaxPool2D, Dense, GlobalAveragePooling2D
+from tensorflow.keras.utils import to_categorical
+from Presentation_Code_for_Instructions import utilities
 import convLayerAnalysis as cla
 from datetime import datetime
 import tensorflow as tf
-import sys
 
 # Load train and test data
 train_images, train_labels, test_images, test_labels = utilities.getDigits()
@@ -25,8 +24,8 @@ print(train_images.shape)
 
 
 # Do one-hot encoding / do categorical conversion
-train_labels = tf.keras.utils.to_categorical(train_labels)
-test_labels = tf.keras.utils.to_categorical(test_labels)
+train_labels = to_categorical(train_labels)
+test_labels = to_categorical(test_labels)
 
 num_epochs=5
 
@@ -68,9 +67,7 @@ training_history = model.fit(
     validation_data=(test_images,test_labels),
     callbacks=[tensorboard_callback],
 )
-layers=cla.getConvLayers(model)
-filters=cla.getFilters(layers[0])
-cla.showFilters2(filters)
+
 model.summary()
 # Evaluate model
 #test_loss, test_acc = model.evaluate(test_images, test_labels)

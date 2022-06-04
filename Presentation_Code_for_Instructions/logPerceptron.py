@@ -1,4 +1,3 @@
-import utilities as util
 import numpy as np
 import functions as f
 from matplotlib import pyplot as plt
@@ -11,7 +10,7 @@ eta = 0.1
 iter = 1000
 
 from sklearn import datasets
-from sklearn.linear_model import LogisticRegression
+
 
 # read iris data
 def getData():
